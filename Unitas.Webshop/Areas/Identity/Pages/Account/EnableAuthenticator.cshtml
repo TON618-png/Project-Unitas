@@ -1,0 +1,20 @@
+@page
+@model Unitas.Webshop.Areas.Identity.Pages.Account.EnableAuthenticatorModel
+@{ ViewData["Title"] = "MFA instellen"; }
+<section class="panel auth content">
+    <h1>MFA instellen</h1>
+    <p>Scan deze QR-code met je authenticator-app en vul de actuele code in.</p>
+    <img class="qr" src="@Model.QrImage" alt="QR-code voor het koppelen van de authenticator" width="200" height="200" />
+    <details>
+        <summary>Handmatig toevoegen</summary>
+        <p>Gebruik tijdgebaseerde codes, 6 cijfers en 30 seconden.</p>
+        <code>@Model.Secret</code>
+    </details>
+    <form method="post">
+        <div asp-validation-summary="ModelOnly"></div>
+        <input asp-for="ReturnUrl" type="hidden" />
+        <label asp-for="Code"><span>Verificatiecode</span><input asp-for="Code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required /></label>
+        <span asp-validation-for="Code"></span>
+        <button type="submit">Verifiëren</button>
+    </form>
+</section>

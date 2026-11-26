@@ -1,0 +1,55 @@
+@page "/bestelling-bevestigd"
+@using Unitas.Webshop.Data
+@model Unitas.Webshop.Pages.ConfirmationModel
+@{
+    ViewData["Title"] = "Bestelling bevestigd";
+    var receipt = Model.Receipt;
+}
+<div class="content checkout-receipt">
+    <header class="detail-head mixer">
+        <h1>Bedankt voor je bestelling</h1>
+    </header>
+    <section class="panel section" aria-labelledby="receipt-title">
+        <h2 id="receipt-title">Bevestiging</h2>
+        <dl class="checkout-reference">
+            <div><dt>Bestelnummer</dt><dd>@receipt.Number</dd></div>
+            <div><dt>Gekozen betaalmethode</dt><dd>@receipt.Method</dd></div>
+        </dl>
+        <ul class="checkout-list summary-lines">
+            @foreach (var line in receipt.Lines)
+            {
+                <li><span>@line.Quantity × @line.Name</span><strong>@CheckoutCart.Money(line.Total)</strong></li>
+            }
+        </ul>
+        <dl class="checkout-totals">
+            <div><dt>Subtotaal</dt><dd>@CheckoutCart.Money(receipt.Subtotal)</dd></div>
+            @if (receipt.Discount > 0)
+            {
+                <div class="checkout-saving"><dt>Korting</dt><dd>−@CheckoutCart.Money(receipt.Discount)</dd></div>
+            }
+            <div class="checkout-total"><dt>Totaal <small>incl. btw</small></dt><dd>@CheckoutCart.Money(receipt.Total)</dd></div>
+        </dl>
+        @if (receipt.Invoice is { } invoice)
+        {
+            if (receipt.InvoiceSent)
+            {
+                <p class="notice success">Je factuur is verzonden naar <strong>@invoice.Email</strong>.</p>
+            }
+            else
+            {
+                <p class="notice error" role="status">We konden je factuur niet versturen naar <strong>@invoice.Email</strong>. Je bestelling is bevestigd.</p>
+                <form method="post" asp-page-handler="ResendInvoice" class="section">
+                    <input type="hidden" name="invoiceId" value="@invoice.Id" />
+                    <button class="button outline" type="submit">Factuur opnieuw versturen</button>
+                </form>
+            }
+        }
+        <div class="actions">
+            <a class="button" asp-page="/Index" asp-fragment="assortiment">Verder winkelen</a>
+            @if (receipt.UserId is not null)
+            {
+                <a class="button outline" asp-page="/Orders">Mijn bestellingen</a>
+            }
+        </div>
+    </section>
+</div>

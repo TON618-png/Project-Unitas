@@ -1,0 +1,72 @@
+@page "/afrekenen"
+@using Unitas.Webshop.Data
+@model Unitas.Webshop.Pages.CheckoutModel
+@{
+    ViewData["Title"] = "Afrekenen";
+    ViewData["Navigation"] = "Winkelwagen";
+}
+<div class="breadcrumbs"><a asp-page="/Cart">Terug naar winkelwagen</a></div>
+<header class="detail-head mixer checkout-head">
+    <h1>Afrekenen</h1>
+</header>
+<form class="split checkout-layout section checkout-form" asp-page-handler="PlaceOrder" method="post">
+    <input type="hidden" name="CartVersion" value="@Model.Cart.Version" />
+    <div class="stack">
+        <section class="panel" aria-labelledby="invoice-email-title">
+            <h2 id="invoice-email-title">Factuur per e-mail</h2>
+            <label asp-for="Email">
+                E-mailadres
+                <input asp-for="Email" type="email" autocomplete="email" maxlength="254" required aria-describedby="invoice-email-help" />
+            </label>
+            <span asp-validation-for="Email" role="alert"></span>
+            <p class="checkout-code-hint muted" id="invoice-email-help">Naar dit adres sturen we je factuur.</p>
+        </section>
+        <section class="panel" aria-labelledby="payment-title">
+            <fieldset class="payment-methods">
+                <legend id="payment-title">Betaalmethode</legend>
+                @foreach (var option in Unitas.Webshop.Pages.CheckoutModel.Options)
+                {
+                    <label class="payment-option" for="method-@option.Id">
+                        <input asp-for="Method" id="method-@option.Id" type="radio" value="@option.Id" aria-describedby="description-@option.Id" />
+                        <span>
+                            <strong>@option.Name</strong>
+                            <small id="description-@option.Id">@option.Description</small>
+                        </span>
+                    </label>
+                }
+                <span asp-validation-for="Method" role="alert"></span>
+            </fieldset>
+        </section>
+        <section class="panel" aria-labelledby="discount-title">
+            <h2 id="discount-title">Kortingscode</h2>
+            @if (Model.Cart.DiscountCode is { } code)
+            {
+                <div class="heading-actions">
+                    <span class="pill">@code · 10% korting</span>
+                    <button class="checkout-link" type="submit" asp-page-handler="RemoveDiscount" formnovalidate>Code verwijderen</button>
+                </div>
+            }
+            else
+            {
+                <label class="sr-only" asp-for="DiscountCode">Kortingscode</label>
+                <div class="checkout-code">
+                    <input asp-for="DiscountCode" maxlength="30" autocomplete="off" placeholder="Vul je code in" />
+                    <button class="button outline" type="submit" asp-page-handler="ApplyDiscount" formnovalidate>Toepassen</button>
+                </div>
+                <span asp-validation-for="DiscountCode" role="alert"></span>
+            }
+        </section>
+    </div>
+    <section class="panel" aria-labelledby="checkout-summary">
+        <h2 id="checkout-summary">Besteloverzicht</h2>
+        <ul class="checkout-list summary-lines">
+            @foreach (var line in Model.Cart.Lines)
+            {
+                <li><span>@line.Quantity × @line.Product.Name</span><strong>@CheckoutCart.Money(line.Total)</strong></li>
+            }
+        </ul>
+        <partial name="_CheckoutTotals" model="Model.Cart" />
+        <div asp-validation-summary="ModelOnly" role="alert"></div>
+        <button class="checkout-primary" type="submit">Bestelling plaatsen</button>
+    </section>
+</form>

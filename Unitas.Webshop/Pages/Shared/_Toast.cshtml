@@ -1,0 +1,11 @@
+@using Unitas.Webshop.Pages
+@if (TempData[ToastNotification.MessageKey] is string message)
+{
+    var isError = TempData[ToastNotification.ErrorKey] is true;
+    <aside class="toast @(isError ? "toast-error" : "")" aria-label="Melding" data-toast data-toast-duration="@(isError ? 0 : 6000)">
+        <p data-toast-message>@message</p>
+        <button class="toast-close" type="button" aria-label="Melding sluiten" data-toast-close hidden>&times;</button>
+    </aside>
+    <div class="sr-only" role="@(isError ? "alert" : "status")" data-toast-announcement></div>
+    <script src="~/js/toast.js" asp-append-version="true" defer></script>
+}

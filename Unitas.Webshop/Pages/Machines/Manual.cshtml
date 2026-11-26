@@ -1,0 +1,20 @@
+@page "/machines/{id}/handleiding"
+@model Unitas.Webshop.Pages.Machines.ManualModel
+@{
+    ViewData["Title"] = "Handleiding " + Model.Machine.Name;
+    ViewData["Navigation"] = "Machines";
+}
+<div class="breadcrumbs"><a asp-page="./Product" asp-route-id="@Model.Machine.Id">@Model.Machine.Name</a></div>
+<article class="panel content">
+    <p class="eyebrow">@Model.Machine.Type</p>
+    <h1>Handleiding @Model.Machine.Name</h1>
+    <p>Volg bij installatie, bediening en onderhoud de officiële instructies van de fabrikant.</p>
+    <h2>Bediening en dagelijkse controle</h2>
+    <ol>
+        @foreach (var step in Model.Machine.Manual)
+        {
+            <li>@step</li>
+        }
+    </ol>
+    <p>Print deze pagina via het afdrukmenu van je browser.</p>
+</article>

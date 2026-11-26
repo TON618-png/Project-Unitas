@@ -1,0 +1,54 @@
+@page "/winkelwagen"
+@using Unitas.Webshop.Data
+@model Unitas.Webshop.Pages.CartModel
+@{
+    ViewData["Title"] = "Winkelwagen";
+    ViewData["Navigation"] = "Winkelwagen";
+}
+<header class="page-head">
+    <h1>Winkelwagen</h1>
+</header>
+
+@if (Model.Cart.Lines.Count == 0)
+{
+    <section class="panel">
+        <h2>Je winkelwagen is leeg</h2>
+        <p>Bekijk het assortiment en voeg een machine toe aan je winkelwagen.</p>
+        <a class="button" asp-page="/Index" asp-fragment="assortiment">Bekijk de machines</a>
+    </section>
+}
+else
+{
+    <div class="split checkout-layout">
+        <section class="panel" aria-labelledby="cart-items">
+            <h2 id="cart-items">Jouw machines</h2>
+            <ul class="checkout-list">
+                @foreach (var line in Model.Cart.Lines)
+                {
+                    <li class="cart-line">
+                        <div class="heading-actions">
+                            <h3><a asp-page="/Machines/Product" asp-route-id="@line.Product.Id">@line.Product.Name</a></h3>
+                            <strong>@CheckoutCart.Money(line.Total)</strong>
+                        </div>
+                        <p class="muted">@CheckoutCart.Money(line.Product.Price) per stuk</p>
+                        <form class="cart-edit" asp-page-handler="Update" method="post">
+                            <input type="hidden" name="id" value="@line.Product.Id" />
+                            <label for="quantity-@line.Product.Id">
+                                Aantal <span class="sr-only">@line.Product.Name</span>
+                                <input id="quantity-@line.Product.Id" name="quantity" type="number" min="1" max="@CheckoutCart.MaxQuantity" value="@line.Quantity" required />
+                            </label>
+                            <button class="button outline" type="submit" aria-label="Aantal @line.Product.Name bijwerken">Bijwerken</button>
+                            <button class="checkout-link" type="submit" asp-page-handler="Remove" formnovalidate aria-label="@line.Product.Name verwijderen">Verwijderen</button>
+                        </form>
+                    </li>
+                }
+            </ul>
+            <a asp-page="/Index" asp-fragment="assortiment">Verder winkelen</a>
+        </section>
+        <aside class="panel" aria-labelledby="cart-summary">
+            <h2 id="cart-summary">Besteloverzicht</h2>
+            <partial name="_CheckoutTotals" model="Model.Cart" />
+            <a class="button checkout-primary" asp-page="/Checkout">Naar afrekenen</a>
+        </aside>
+    </div>
+}

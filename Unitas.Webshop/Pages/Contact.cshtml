@@ -1,0 +1,36 @@
+@page "/contact"
+@using System.Net.Mail
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@{
+    ViewData["Title"] = "Contact";
+    ViewData["Navigation"] = "Contact";
+    var contactEmail = Configuration["Contact:Email"];
+    var canEmail = MailAddress.TryCreate(contactEmail, out var address) && address.Address == contactEmail;
+}
+<div class="breadcrumbs"><a asp-page="/Index">Naar de webshop</a></div>
+<section class="detail-head mixer">
+    <h1>Contact</h1>
+    <p>Heb je een vraag over een machine, een handleiding of een offerte?</p>
+</section>
+<div class="split section">
+    <section class="panel">
+        <h2>Vraag over een machine of offerte</h2>
+        <p>Kies de machine waar je vraag over gaat. Op de productpagina staan de specificaties, een handleiding en een veelgestelde vraag. Bij een offerteaanvraag kun je je vraag in het toelichtingsveld zetten.</p>
+        <a class="button" asp-page="/Index" asp-fragment="assortiment">Bekijk machines</a>
+    </section>
+    <div class="stack">
+        <section class="panel">
+            <h2>Een aanvraag terugvinden</h2>
+            <p>Bekijk je eerder verstuurde aanvragen onder Mijn offerteaanvragen in het klantenportaal.</p>
+            <a class="button outline" asp-page="/Portal">Naar het klantenportaal</a>
+        </section>
+        @if (canEmail && address is not null)
+        {
+            <section class="panel">
+                <h2>Algemene vragen</h2>
+                <p>Neem per e-mail contact op met Unitas Bakery Systems.</p>
+                <a class="button outline" href="mailto:@address.Address">Stuur een e-mail</a>
+            </section>
+        }
+    </div>
+</div>

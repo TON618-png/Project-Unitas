@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] · Unitas Bakery Systems</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <a class="skip" href="#main">Naar inhoud</a>
+    <header class="top">
+        <div class="shell bar">
+            <a class="brand" asp-area="" asp-page="/Index">
+                <span class="mark" aria-hidden="true">U</span>
+                <span><strong>UNITAS</strong><small>BAKERY SYSTEMS</small></span>
+            </a>
+            <nav aria-label="Hoofdnavigatie">
+                <a asp-area="" asp-page="/Index" aria-current="@(ViewData["Navigation"] as string == "Machines" ? "page" : null)">Machines</a>
+                <a asp-area="" asp-page="/Portal" aria-current="@(ViewData["Navigation"] as string == "Portal" ? "page" : null)">Klantenportaal</a>
+                <a asp-area="" asp-page="/About" aria-current="@(ViewData["Navigation"] as string == "Over ons" ? "page" : null)">Over ons</a>
+                <a asp-area="" asp-page="/Contact" aria-current="@(ViewData["Navigation"] as string == "Contact" ? "page" : null)">Contact</a>
+                <a asp-area="" asp-page="/Cart" aria-current="@(ViewData["Navigation"] as string == "Winkelwagen" ? "page" : null)">Winkelwagen</a>
+            </nav>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <form asp-area="Identity" asp-page="/Account/Logout" method="post" class="inline">
+                    <button class="button outline" type="submit">Uitloggen</button>
+                </form>
+            }
+            else
+            {
+                <a class="button outline" asp-area="Identity" asp-page="/Account/Login">Inloggen</a>
+            }
+        </div>
+    </header>
+    <main id="main" class="shell">@RenderBody()</main>
+    <footer class="shell footer"><span>Unitas Bakery Systems B.V.</span><span>Project Unitas</span></footer>
+    <partial name="_Toast" />
+</body>
+</html>

@@ -1,0 +1,68 @@
+@page "/mijn-bestellingen"
+@using Unitas.Webshop.Data
+@using Unitas.Webshop.Pages
+@model OrdersModel
+@{
+    ViewData["Title"] = "Mijn bestellingen";
+    ViewData["Navigation"] = "Portal";
+}
+<div class="breadcrumbs"><a asp-page="/Portal">Terug naar klantenportaal</a></div>
+<header class="page-head">
+    <h1>Mijn bestellingen</h1>
+</header>
+
+@if (Model.Orders.Count == 0)
+{
+    <section class="panel">
+        <h2>Je hebt nog geen bestellingen geplaatst</h2>
+        <p>Bestellingen die je met dit account plaatst, verschijnen hier.</p>
+        <a class="button" asp-page="/Index" asp-fragment="assortiment">Bekijk het assortiment</a>
+    </section>
+}
+else
+{
+    <div class="stack">
+        @foreach (var order in Model.Orders)
+        {
+            <section class="panel order-history-card" aria-labelledby="order-@order.Number">
+                <div class="heading-actions">
+                    <div>
+                        <h2 id="order-@order.Number">Bestelling @order.Number</h2>
+                        @if (order.Invoice is { } invoice)
+                        {
+                            <p class="muted"><time datetime="@invoice.IssuedAt.ToString("O")">@OrdersModel.DisplayDate(invoice.IssuedAt)</time> · @order.Method</p>
+                        }
+                    </div>
+                    <div class="order-history-total">
+                        <strong>@CheckoutCart.Money(order.Total)</strong>
+                        <small class="muted">Totaal incl. btw</small>
+                    </div>
+                </div>
+                <ul class="checkout-list summary-lines">
+                    @foreach (var line in order.Lines)
+                    {
+                        <li><span>@line.Quantity × @line.Name</span><strong>@CheckoutCart.Money(line.Total)</strong></li>
+                    }
+                </ul>
+                @if (order.Discount > 0)
+                {
+                    <p class="order-history-discount">Korting van @CheckoutCart.Money(order.Discount) verrekend.</p>
+                }
+            </section>
+        }
+    </div>
+    @if (Model.PageCount > 1)
+    {
+        <nav class="section order-pagination" aria-label="Paginering van bestellingen">
+            @if (Model.PageNumber > 1)
+            {
+                <a class="button outline" asp-page="/Orders" asp-route-pageNumber="@(Model.PageNumber - 1)">Vorige</a>
+            }
+            <span>Pagina @Model.PageNumber van @Model.PageCount</span>
+            @if (Model.PageNumber < Model.PageCount)
+            {
+                <a class="button outline" asp-page="/Orders" asp-route-pageNumber="@(Model.PageNumber + 1)">Volgende</a>
+            }
+        </nav>
+    }
+}

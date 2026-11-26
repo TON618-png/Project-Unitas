@@ -1,0 +1,52 @@
+@page "/portal"
+@using System.Globalization
+@using Unitas.Webshop.Data
+@model Unitas.Webshop.Pages.PortalModel
+@{
+    ViewData["Title"] = "Klantenportaal";
+    ViewData["Navigation"] = "Portal";
+    var timezone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Amsterdam");
+    var culture = CultureInfo.GetCultureInfo("nl-NL");
+}
+<div class="page-head">
+    <h1>Klantenportaal</h1><p>Welkom, @User.Identity?.Name.</p>
+</div>
+<div class="stack">
+    <section class="panel">
+        <h2>Mijn bestellingen</h2>
+        <p>Bekijk de bestellingen die je met dit account hebt geplaatst.</p>
+        <a class="button" asp-page="/Orders">Bekijk mijn bestellingen</a>
+    </section>
+    <section class="panel">
+        <h2>Mijn offerteaanvragen</h2>
+        @if (Model.Quotes.Count == 0)
+        {
+            <p class="empty">Je hebt nog geen offerteaanvragen.</p>
+        }
+        else
+        {
+            <div class="table-wrap" tabindex="0" role="region" aria-label="Mijn offerteaanvragen">
+                <table>
+                    <thead><tr><th scope="col">Nr.</th><th scope="col">Machine</th><th scope="col">Aantal</th><th scope="col">Datum</th><th scope="col">Toelichting</th></tr></thead>
+                    <tbody>
+                        @foreach (var quote in Model.Quotes)
+                        {
+                            var date = TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(quote.CreatedAt, DateTimeKind.Utc), timezone);
+                            <tr><td>@quote.Id</td><td>@(Catalog.Find(quote.ProductId)?.Name ?? quote.ProductId)</td><td>@quote.Quantity</td><td>@date.ToString("dd MMM yyyy HH:mm", culture)</td><td>@quote.Note</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        <a class="button outline" asp-page="/Index" asp-fragment="assortiment">Machines bekijken</a>
+    </section>
+    <section class="panel">
+        <h2>Handleidingen</h2>
+        <ul class="list-links">
+            @foreach (var product in Catalog.Products)
+            {
+                <li><a asp-page="/Machines/Manual" asp-route-id="@product.Id">@product.Name</a></li>
+            }
+        </ul>
+    </section>
+</div>

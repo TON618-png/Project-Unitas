@@ -1,0 +1,26 @@
+@page "/over-ons"
+@{
+    ViewData["Title"] = "Over ons";
+    ViewData["Navigation"] = "Over ons";
+}
+<div class="breadcrumbs"><a asp-page="/Index">Naar de webshop</a></div>
+<section class="detail-head oven">
+    <p class="eyebrow">Unitas Bakery Systems</p>
+    <h1>Over ons</h1>
+    <p>Wij richten ons op machines voor professionele bakkerijen, van deegbereiding tot bakken.</p>
+</section>
+<div class="split section">
+    <section class="panel">
+        <h2>Van deeg tot oven</h2>
+        <p>In ons assortiment vind je spiraalkneders voor deegbereiding, deegverdelers voor gelijkmatige porties en rotatieovens voor het bakproces.</p>
+        <p>Op elke machinepagina vind je de capaciteit, specificaties en informatie over het gebruik.</p>
+        <div class="actions">
+            <a class="button" asp-page="/Index" asp-fragment="assortiment">Bekijk het assortiment</a>
+            <a class="button outline" asp-page="/Contact">Contact</a>
+        </div>
+    </section>
+    <section class="panel">
+        <h2>Bestellen en offertes</h2>
+        <p>Je kunt machines rechtstreeks vanuit het assortiment bestellen. Heb je vragen over een uitvoering of wil je een offerte, ga dan naar de machinepagina.</p>
+    </section>
+</div>

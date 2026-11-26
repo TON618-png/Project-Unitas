@@ -1,0 +1,10 @@
+@using Unitas.Webshop.Data
+@model CheckoutCart
+<dl class="checkout-totals">
+    <div><dt>Subtotaal</dt><dd>@CheckoutCart.Money(Model.Subtotal)</dd></div>
+    @if (Model.Discount > 0)
+    {
+        <div class="checkout-saving"><dt>Korting</dt><dd>−@CheckoutCart.Money(Model.Discount)</dd></div>
+    }
+    <div class="checkout-total"><dt>Totaal <small>incl. btw</small></dt><dd>@CheckoutCart.Money(Model.Total)</dd></div>
+</dl>

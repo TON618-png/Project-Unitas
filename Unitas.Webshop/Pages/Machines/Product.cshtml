@@ -1,0 +1,59 @@
+@page "/machines/{id}"
+@using Unitas.Webshop.Data
+@model Unitas.Webshop.Pages.Machines.ProductModel
+@{
+    ViewData["Title"] = Model.Machine.Name;
+    ViewData["Navigation"] = "Machines";
+    var machine = Model.Machine;
+}
+<div class="breadcrumbs"><a asp-page="/Index" asp-fragment="assortiment">Alle machines</a></div>
+<div class="detail-head @machine.Accent">
+    <p class="eyebrow">@machine.Type</p><h1>@machine.Name</h1><p>@machine.Description</p>
+</div>
+<div class="split section">
+    <div class="stack">
+        <section class="panel">
+            <h2>Specificaties</h2>
+            <p>@machine.Capacity · @machine.Specification</p>
+            <a class="button outline" asp-page="./Manual" asp-route-id="@machine.Id">Open handleiding</a>
+        </section>
+        <section class="panel">
+            <h2>Veelgestelde vraag</h2>
+            <details><summary>@machine.Question</summary><p>@machine.Answer</p></details>
+        </section>
+    </div>
+    <div class="stack">
+        <section class="panel">
+            <h2>Bestellen</h2>
+            <p class="checkout-price">@CheckoutCart.Money(machine.Price)</p>
+            <p class="muted">Inclusief btw</p>
+            <form asp-page="/Cart" asp-page-handler="Add" method="post">
+                <input type="hidden" name="id" value="@machine.Id" />
+                <button type="submit">In winkelwagen</button>
+            </form>
+        </section>
+        <section class="panel">
+            <h2>Offerte aanvragen</h2>
+            @if (User.HasClaim("amr", "mfa"))
+            {
+                <form method="post">
+                    <label asp-for="Input.Quantity"><span>Aantal</span><input asp-for="Input.Quantity" min="1" max="99" required /></label>
+                    <span asp-validation-for="Input.Quantity"></span>
+                    <label asp-for="Input.Note"><span>Toelichting of vraag (optioneel)</span><textarea asp-for="Input.Note" rows="4" maxlength="1000"></textarea></label>
+                    <span asp-validation-for="Input.Note"></span>
+                    <button type="submit">Offerte aanvragen</button>
+                </form>
+            }
+            else if (User.Identity?.IsAuthenticated == true)
+            {
+                <p>Rond MFA af om een offerte aan te vragen.</p>
+                <a class="button" asp-area="Identity" asp-page="/Account/EnableAuthenticator" asp-route-returnUrl="@Request.Path">MFA instellen</a>
+            }
+            else
+            {
+                <p>Log in op je klantaccount om een offerte aan te vragen.</p>
+                <a class="button" asp-area="Identity" asp-page="/Account/Login" asp-route-returnUrl="@Request.Path">Inloggen</a>
+            }
+        </section>
+    </div>
+</div>

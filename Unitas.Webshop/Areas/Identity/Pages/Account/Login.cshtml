@@ -1,0 +1,17 @@
+@page
+@model Unitas.Webshop.Areas.Identity.Pages.Account.LoginModel
+@{ ViewData["Title"] = "Inloggen"; }
+<section class="panel auth content">
+    <h1>Inloggen</h1>
+    <p>Gebruik je gebruikersnaam, wachtwoord en authenticator-app.</p>
+    <form method="post">
+        <div asp-validation-summary="ModelOnly"></div>
+        <input asp-for="ReturnUrl" type="hidden" />
+        <label asp-for="Input.Username"><span>Gebruikersnaam</span><input asp-for="Input.Username" autocomplete="username" required /></label>
+        <span asp-validation-for="Input.Username"></span>
+        <label asp-for="Input.Password"><span>Wachtwoord</span><input asp-for="Input.Password" autocomplete="current-password" required /></label>
+        <span asp-validation-for="Input.Password"></span>
+        <button type="submit">Inloggen</button>
+    </form>
+    <p>Nog geen account? <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Registreren</a></p>
+</section>

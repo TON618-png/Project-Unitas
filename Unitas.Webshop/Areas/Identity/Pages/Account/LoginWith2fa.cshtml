@@ -1,0 +1,13 @@
+@page
+@model Unitas.Webshop.Areas.Identity.Pages.Account.LoginWith2faModel
+@{ ViewData["Title"] = "Verificatiecode"; }
+<section class="panel auth content">
+    <h1>Verificatiecode</h1>
+    <p>Vul de 6-cijferige code uit je authenticator-app in.</p>
+    <form method="post">
+        <input asp-for="ReturnUrl" type="hidden" />
+        <label asp-for="Code"><span>Verificatiecode</span><input asp-for="Code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required /></label>
+        <span asp-validation-for="Code"></span>
+        <button type="submit">Verifiëren</button>
+    </form>
+</section>

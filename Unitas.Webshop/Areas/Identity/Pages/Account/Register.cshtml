@@ -1,0 +1,17 @@
+@page
+@model Unitas.Webshop.Areas.Identity.Pages.Account.RegisterModel
+@{ ViewData["Title"] = "Klantaccount maken"; }
+<section class="panel auth content">
+    <h1>Klantaccount maken</h1>
+    <p>Kies een gebruikersnaam en een wachtwoord van minimaal 8 tekens. Koppel daarna je authenticator-app.</p>
+    <form method="post">
+        <div asp-validation-summary="ModelOnly"></div>
+        <input asp-for="ReturnUrl" type="hidden" />
+        <label asp-for="Input.Username"><span>Gebruikersnaam</span><input asp-for="Input.Username" autocomplete="username" minlength="3" maxlength="32" required /></label>
+        <span asp-validation-for="Input.Username"></span>
+        <label asp-for="Input.Password"><span>Wachtwoord</span><input asp-for="Input.Password" autocomplete="new-password" minlength="8" maxlength="128" required /></label>
+        <span asp-validation-for="Input.Password"></span>
+        <button type="submit">Registreren</button>
+    </form>
+    <p>Al een account? <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Inloggen</a></p>
+</section>
